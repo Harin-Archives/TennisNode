@@ -1,0 +1,112 @@
+<html>
+<body onload="getScore()">
+<h1>Welcome to the Wimbledon Open!</h1>
+
+<div style="float: left; margin-right: 20px;">
+<div>Player1</div> <div id="P1Score">0</div>
+</div>
+
+<div>
+<div>Player2</div> <div id='P2Score'>0</div>
+</div>
+
+<br>
+<div id='GameStatus'>Game In Progress</div>
+<br>
+
+<button onclick="score('Player1')">Player1 Scored</button>
+<button onclick="score('Player2')">Player2 Scored</button>
+<br>
+<br>
+<button onclick="reset()">Reset Game</button>
+</body>
+</html>
+
+<script>
+    function getScore() {
+        console.log("Get Score")
+
+        return new Promise((resolve, reject) => {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function(res) {
+                resolve(JSON.parse(res.currentTarget.response));
+            }
+
+            xhttp.onerror = function(err) {
+                reject(err)
+            }
+
+            xhttp.open('GET', 'http://localhost:3000/getScore');
+            xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xhttp.send();
+        }).then((res, err) => {
+            console.log(res);
+            document.getElementById("P1Score").innerText = res.player1Score;
+            document.getElementById("P2Score").innerText = res.player2Score;
+
+            if (!res.inProgress) {
+                document.getElementById("GameStatus").innerText = res.player1Score > res.player2Score ? "Player 1 Wins!" : "Player 2 Wins!"
+            }
+        });
+    }
+
+    function reset() {
+        console.log("Game Reset")
+
+        return new Promise((resolve, reject) => {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function(res) {
+                console.log(res);
+                resolve(JSON.parse(res.currentTarget.response));
+            }
+
+            xhttp.onerror = function(err) {
+                reject(err)
+            }
+
+            xhttp.open('GET', 'http://localhost:3000/resetGame');
+            xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xhttp.send();
+        }).then((res, err) => {
+            console.log(res);
+            document.getElementById("P1Score").innerText = "0"
+            document.getElementById("P2Score").innerText = "0"
+            document.getElementById("GameStatus").innerText = "Game In Progress"
+        });
+    }
+
+    function score(player) {
+        console.log(player)
+
+        return new Promise((resolve, reject) => {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function(res) {
+                resolve(JSON.parse(res.currentTarget.response));
+            }
+
+            xhttp.onerror = function(err) {
+                reject(err)
+            }
+
+            xhttp.open('POST', 'http://localhost:3000/addPoint');
+            xhttp.setRequestHeader('Content-Type', 'application/json');
+            xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+            let query = {
+                "player": player,
+            }
+            xhttp.send(JSON.stringify(query));
+        }).then((res, err) => {
+            console.log(res);
+            if (res.message && res.message == 'Game finished') {
+                alert("Game Finished, Please Start New Game");
+            } else {
+                document.getElementById("P1Score").innerText = res.player1Score
+                document.getElementById("P2Score").innerText = res.player2Score
+
+                if (!res.inProgress) {
+                    document.getElementById("GameStatus").innerText = res.player1Score > res.player2Score ? "Player 1 Wins!" : "Player 2 Wins!"
+                }
+            }
+        });
+    }
+</script>
