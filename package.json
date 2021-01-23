@@ -1,0 +1,35 @@
+{
+  "name": "tennisnode",
+  "version": "1.0.0",
+  "description": "Tennis Score API",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harin329/TennisNode.git"
+  },
+  "keywords": [
+    "Node.js"
+  ],
+  "author": "Harin (Hao)",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harin329/TennisNode/issues"
+  },
+  "homepage": "https://github.com/Harin329/TennisNode#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-jest": "^26.6.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "jest": "^26.6.3"
+  }
+}
