@@ -46,6 +46,8 @@ app.get('/getScore', (_, res) => {
 });
 
 app.get('/resetGame', (_, res) => {
+    game.resetScore();
+    
     res.json({
         player1Score: game.player1Score,
         player2Score: game.player2Score,
